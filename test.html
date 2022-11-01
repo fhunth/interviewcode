@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 10px;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        html, body {
+            background-color: #333;
+            color: #eee;
+        }
+    </style>
+</head>
+<body>  
+   
+</body>
+
+ <!--
+    
+        /**
+         * 1) Fetch the json from the URL below and store it in a global variable called mockyData
+           https://run.mocky.io/v3/8cc1b858-2e3e-4249-a025-c0c52053d618
+          
+           Render all the users into a new #users div. One by one, each in it's own div having the class .user
+           and the html to be the full name of that user. NOTE: Render only users with a valid numeric id
+           2) Create a group of divs based on the "numbers" property you get from the above data you just fetched.
+           Match each user id with the number from the "numbers" multidimensional array
+            <div></div> 
+            <div>
+                <div>John Doe</div>
+                <div>Jane Doe</div>
+            </div>
+            <div></div>
+            
+           3) Create a search feature. Should contain a wrapper class .search, inside have an input, a button, 
+           and a .results div. Retrieve the user based on id. Meaning, you enter the id 
+           into the input and then press the button, and you should put the fullname of that user into the .results div.
+           
+           4) Output true/false if the sum of numbers from first diagonal is equal to the sum of numbers 
+           from the second diagonal, from the multidimensional array of "numbers".
+           HELP: Make an algorithm that iterates through the matrix and outputs 1+5+9 === 3+5+7
+           [
+               [ 1, 2, 3 ],
+               [ 4, 5, 6 ],
+               [ 7, 8, 9 ],
+           ]
+        * 
+        */
+    -->
+    <script lang="javascript">
+
+        
+        const yellowDiv = document.createElement('div');    
+        yellowDiv.style.backgroundColor = 'cyan lighten-2';
+    
+        yellowDiv.setAttribute('id', 'users');
+
+        document.body.appendChild(yellowDiv);
+
+
+
+
+        //Fetch the json from the URL below and store it in a global variable called mockyData
+        //   https://run.mocky.io/v3/8cc1b858-2e3e-4249-a025-c0c52053d618
+        let myurl= 'https://run.mocky.io/v3/8cc1b858-2e3e-4249-a025-c0c52053d618';
+
+
+
+    
+         var mockyData = fetch(myurl)
+            .then(response => response.json())
+
+            .then(data => {
+                console.log(data); //esta ok
+
+
+                DIVusers = document.getElementById('users');
+                
+
+                var usersData = data.data.users;
+
+
+                var usersDataLength = data.data.users.length;
+                for (var i = 0; i < 16; i++) {
+
+                    if (!isEmpty(usersData[i].id)) {
+                        var user = usersData[i];
+                        var userDiv = document.createElement("div");
+                        userDiv.style.width = '500px';
+
+                        userDiv.className = "user";
+                        userDiv.innerHTML = user.firstName + " " + user.lastName;
+                        userDiv.setAttribute('id', usersData[i].id);
+                        DIVusers.appendChild(userDiv);
+                    }
+
+                }
+
+                //part 2 Numbers DIVs
+              
+                var numbersData = data.numbers;
+                var numbersDataLength = data.numbers.length;
+                for (var i = 0; i < numbersDataLength; i++) {
+
+                    var numbersDataLengthSecond = data.numbers[i].length;
+
+                    
+                    for (var ii = 0; ii < numbersDataLengthSecond; ii++) {
+
+                        if (!isEmpty(numbersData[i][ii])){
+                        
+                            var number = numbersData[i][ii];
+                            var numberDiv = document.createElement("div");
+                            numberDiv.style.width = '500px';
+
+                            numberDiv.className = "number";
+                            numberDiv.innerHTML = number;
+                            numberDiv.setAttribute('id', number);
+
+                            numberDiv.style.backgroundColor = 'grey';
+
+                            DIVusers.appendChild(numberDiv);
+
+                        }
+                    }
+                }
+
+                // part group
+
+
+                var users = document.getElementsByClassName("user");
+
+                var usersLength = users.length;
+                for (var i = 0; i < usersLength; i++) {
+                    var DIVuser = users[i];
+                    var DIVuserNumber = DIVuser.id;
+
+                    allDIVSNumbers = document.getElementsByClassName("number");
+                    var allDIVSNumbersLength = allDIVSNumbers.length;
+                    for (var j = 0; j < allDIVSNumbersLength; j++) {
+
+                        var DIVnumber = allDIVSNumbers[j];
+                        var DIVnumberNumber = DIVnumber.innerHTML;
+                        if (DIVuserNumber == DIVnumberNumber) {
+                            DIVnumber.appendChild(DIVuser);
+                        }
+
+                    }
+
+                  
+                }
+                
+                //search
+               
+                var searchDiv = document.createElement("div");
+                searchDiv.style.width = '500px';
+                searchDiv.style.top = '100px';
+                searchDiv.style.left = '500px';    
+                searchDiv.style.position = 'absolute';
+                searchDiv.className = "search";
+                searchDiv.innerHTML = "Search";
+                DIVusers.appendChild(searchDiv);
+               
+                var input = document.createElement("input");
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'input');
+                searchDiv.appendChild(input);
+                //button
+                var button = document.createElement("button");
+                button.setAttribute('type', 'button');
+                button.setAttribute('id', 'button');
+                button.innerHTML = "Search";
+                searchDiv.appendChild(button);
+                //results div
+                var resultsDiv = document.createElement("div");
+                resultsDiv.style.width = '500px';
+                resultsDiv.className = "results";
+                resultsDiv.innerHTML = "Results";
+                searchDiv.appendChild(resultsDiv);
+                //button click                
+                button.addEventListener("click", function () {
+                    var input = document.getElementById("input").value;
+                    var user = document.getElementById(input);
+                    var userFullName = user.innerHTML;
+                    resultsDiv.innerHTML = userFullName;
+                });
+
+
+
+                //diagonal
+                
+                var numbersData = data.numbers;
+                var numbersDataLength = data.numbers.length;
+                var firstDiagonal = 0;
+                var secondDiagonal = 0;
+
+                var firstNumbers="";
+                var secondNumbers="";
+                for (var i = 0; i < numbersDataLength; i++) {
+
+                    var numbersDataLengthSecond = data.numbers[i].length;
+
+                    for (var ii = 0; ii < numbersDataLengthSecond; ii++) {
+
+                        if (!isEmpty(numbersData[i][ii])) {
+
+                            var number = numbersData[i][ii];
+                            
+
+                           
+
+                            if (i == ii) {
+                                firstDiagonal = firstDiagonal + number;
+                                firstNumbers = firstNumbers + number + " + ";
+                            }
+                            if (i + ii == numbersDataLength - 1) {
+                                secondDiagonal = secondDiagonal + number;
+                                secondNumbers = secondNumbers + number + " + ";
+
+                            }
+                        }
+                    }
+                }
+              
+
+              
+                var resultsDivDiagonal = document.createElement("div");
+                resultsDivDiagonal.style.width = '500px';
+                resultsDivDiagonal.style.top = '300px';
+                resultsDivDiagonal.style.left = '500px';
+                resultsDivDiagonal.style.position = 'absolute';
+
+                resultsDivDiagonal.className = "resultsDiagonal";
+                resultsDivDiagonal.innerHTML = "Results Diagonal";
+                searchDiv.appendChild(resultsDivDiagonal);
+                if (firstDiagonal == secondDiagonal) {
+                    resultsDivDiagonal.innerHTML = firstNumbers + " === " + secondNumbers + ": diagonal true";
+                } else {
+                    resultsDivDiagonal.innerHTML = firstNumbers + " === " + secondNumbers + ": diagonal false";
+                }
+
+                document.body.appendChild(resultsDivDiagonal);
+
+
+
+
+
+
+
+                
+
+                return data;
+            })
+
+
+          
+
+
+
+    function isEmpty(val){
+        return (val === undefined || val == null || val.length <= 0) ? true : false;
+    }
+
+        
+    </script>
+</html>
